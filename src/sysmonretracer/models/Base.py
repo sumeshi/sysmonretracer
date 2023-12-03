@@ -7,7 +7,6 @@ class BaseEvent(metaclass=ABCMeta):
     ProcessGuid: str
     ProcessId: int
     ParentProcessGuid: str
-    EventId: int
     Timestamp: datetime
 
     @abstractclassmethod
