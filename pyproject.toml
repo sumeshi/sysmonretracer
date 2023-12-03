@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "sysmonretracer"
+version = "0.1.0"
+description = ""
+authors = ["sumeshi <sum3sh1@protonmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.scripts]
+sysmonretracer = 'sysmonretracer.run:main'
+
+[tool.poetry.dependencies]
+python = "^3.11"
+evtx = "^0.8.3"
+orjson = "^3.9.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
