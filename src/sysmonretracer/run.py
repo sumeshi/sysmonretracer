@@ -7,7 +7,7 @@ __version__ = '0.1.0'
 
 @click.group()
 @click.help_option('-h', '--help')
-@click.version_option(__version__, '-v', '--version', message='%(prog)s v%(version)s')
+@click.version_option(__version__, '-v', '--version', message='v%(version)s')
 def cmd():
     pass
 
@@ -15,19 +15,29 @@ def cmd():
 @cmd.command()
 @click.argument('query')
 @click.argument('eventlog')
+@click.option('-k', '--key', type=click.Choice(['commandline', 'hash', 'image'], case_sensitive=False), default='image', help='')
+@click.option('-i', '--ignore-case', is_flag=True, help='')
+@click.option('-F', '--fixed-strings', is_flag=True, help='')
 @click.option('-sd', '--start-date', help='')
 @click.option('-ed', '--end-date', help='')
-@click.option('-F', '--fixed-strings', is_flag=False, help='')
 @click.help_option('-h', '--help')
 def find(
-    eventlog: str,
     query: str,
+    eventlog: str,
+    key: str,
+    ignore_case: bool,
+    fixed_strings: bool,
     start_date: str,
     end_date: str,
-    fixed_strings: bool,
 ):
+    key_dict = {
+        'commandline': 'Event.EventData.CommandLine',
+        'hash': 'Event.EventData.Hashes',
+        'image': 'Event.EventData.Image',
+    }
+    
     df = EvtxController.load_to_dataframe(eventlog)
-    df['Event.EventData.Image'].str.contains(query, regex=fixed_strings)
+    df = df[df[key_dict.get(key)].str.contains(query, regex=not fixed_strings, case=not ignore_case, na=False)]
     print(df)
 
 
